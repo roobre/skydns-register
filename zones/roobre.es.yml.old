@@ -1,0 +1,17 @@
+roobre.es:
+  .:
+    - type: A
+      host: "0.0.0.0"
+    - type: MX
+      host: mail.roobre.es
+      priority: 10
+  mail:
+    - type: CNAME
+      host: roobre.es
+  home:
+    - type: CNAME
+      host: roobre.duckdns.org
+  xmpp:
+    - type: SRV
+      host: roobre.es
+      port: 5522
