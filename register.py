@@ -27,9 +27,14 @@ def main():
 
     etcd = etcd3.client(host=args.etcd_host, port=args.etcd_port)
 
-    records = []
+    records = {}
     for z in zones:
-        print(json.dumps(sky_from_zone(z, args.etcd_prefix)))
+        records.update(sky_from_zone(z))
+
+    for r in records:
+        print(f"Registering{r}...")
+        etcd.put(r, records[r])
+    print("Done, have a nice day!")
 
 
 def argparse_add_environ(parser: argparse.ArgumentParser, name: str, default: str = '', **other):
