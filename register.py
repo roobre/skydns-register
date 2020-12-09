@@ -12,10 +12,14 @@ def main():
     parser = argparse.ArgumentParser()
     argparse_add_environ(parser, '--zonedir', type=str, help='Directory to look for zones into')
     argparse_add_environ(parser, '--dry-run', action='store_true', default=False, help='Do not write anything to etcd')
+    argparse_add_environ(parser, '--verbose', action='store_true', default=False, help='Do not write anything to etcd')
     argparse_add_environ(parser, '--etcd-host', type=str, default='localhost', help='etcd host')
     argparse_add_environ(parser, '--etcd-port', type=int, default=2379, help='etcd port')
     argparse_add_environ(parser, '--etcd-prefix', type=str, default='external-dns', help='Prefix for etcd record keys')
     args, extra = parser.parse_known_args()
+
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
 
     zw = zonewalker.Zonewalker()
 
