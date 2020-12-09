@@ -13,7 +13,7 @@ class EtcdClient:
     def update(self, records: dict):
         for val, meta in self._etcd.get_all():
             val = json.loads(val)
-            if 'managed-by' in val and val['managed-by'] == 'skydns-register' and meta.key not in records:
+            if 'managed-by' in val and val['managed-by'] == 'skydns-register' and meta.key.decode() not in records:
                 logging.info(f"Deleting {meta.key}")
                 if not self._dry_run:
                     self._etcd.delete(meta.key)

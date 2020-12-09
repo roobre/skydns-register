@@ -64,7 +64,7 @@ class Record:
 
             if 'value' not in entry:
                 if 'values' in entry and type(entry['values']) == list and len(entry['values']) > 0:
-                    logging.info('Using first entry of "values" as value')
+                    logging.info(f"Using first entry of 'values' as value for '{self._name}'")
                     entry['value'] = entry['values'][0]
                 else:
                     logging.warning(f"entry {self._name} lacks both 'value' and 'values', skipping")
