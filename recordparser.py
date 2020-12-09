@@ -1,9 +1,11 @@
 import logging
 
+from typing import Dict
+
 
 class RecordParser:
     def __init__(self, prefix: str = ''):
-        self._records = dict[Record]()
+        self._records: Dict[Record] = {}
         self._prefix = prefix
 
     def parse_zone(self, zone: dict):
@@ -14,7 +16,7 @@ class RecordParser:
             key = self._dots_to_slashes(f"{rname}.{zonename}")
             self._records[key] = Record(rname, record)
 
-    def skydns_entries(self) -> dict[dict]():
+    def skydns_entries(self) -> dict:
         skyentries = {}
         for key in self._records:
             record = self._records[key]
