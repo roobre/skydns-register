@@ -71,7 +71,7 @@ class Record:
                     logging.info(f"Using first entry of 'values' as value for '{self._name}'")
                     entry['value'] = entry['values'][0]
                 else:
-                    logging.warning(f"entry {self._name} lacks both 'value' and 'values', skipping")
+                    logging.warning(f"entry {self._name} lacks both 'value' and 'values[]', skipping")
                     continue
 
             if entry['type'] in ['A', 'AAAA', 'CNAME']:
