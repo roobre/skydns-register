@@ -2,6 +2,7 @@
 
 import logging
 import os
+import time
 import argparse
 import zonewalker
 import recordparser
@@ -16,35 +17,42 @@ def main():
     argparse_add_environ(parser, '--etcd-host', type=str, default='localhost', help='etcd host')
     argparse_add_environ(parser, '--etcd-port', type=int, default=2379, help='etcd port')
     argparse_add_environ(parser, '--etcd-prefix', type=str, default='external-dns', help='Prefix for etcd record keys')
+    argparse_add_environ(parser, '--loop-every', type=int, default=0, help='Loop every n seconds. Set to 0 to run once')
     args, extra = parser.parse_known_args()
 
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    zw = zonewalker.Zonewalker()
+    while True:
+        zw = zonewalker.Zonewalker()
 
-    if args.zonedir:
-        zw.load_dir(args.zonedir)
+        if args.zonedir:
+            zw.load_dir(args.zonedir)
 
-    for zonefile in extra:
-        zw.load_file(zonefile)
+        for zonefile in extra:
+            zw.load_file(zonefile)
 
-    rp = recordparser.RecordParser(prefix=args.etcd_prefix)
-    for z in zw.zones():
-        rp.parse_zone(z)
+        rp = recordparser.RecordParser(prefix=args.etcd_prefix)
+        for z in zw.zones():
+            rp.parse_zone(z)
 
-    try:
-        etcd = etcdclient.EtcdClient(args.etcd_host, int(args.etcd_port), args.dry_run)
-    except Exception as e:
-        logging.error(f"could not connect to etcd at {args.etcd_host}:{args.etcd_port}: {str(e)}")
-        exit(2)
-        return
+        try:
+            etcd = etcdclient.EtcdClient(args.etcd_host, int(args.etcd_port), args.dry_run)
+        except Exception as e:
+            logging.error(f"could not connect to etcd at {args.etcd_host}:{args.etcd_port}: {str(e)}")
+            exit(2)
+            return
 
-    try:
-        etcd.update(rp.skydns_entries())
-    except Exception as e:
-        logging.error(f"error updating etcd: {str(e)}")
-        exit(3)
+        try:
+            etcd.update(rp.skydns_entries())
+        except Exception as e:
+            logging.error(f"error updating etcd: {str(e)}")
+            exit(3)
+
+        if args.loop_every == 0:
+            break
+
+        time.sleep(args.loop_every)
 
 
 def argparse_add_environ(parser: argparse.ArgumentParser, name: str, default=None, **other):
