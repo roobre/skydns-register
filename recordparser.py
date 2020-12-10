@@ -13,6 +13,10 @@ class RecordParser:
         for rname in zone['records']:
             record = zone['records'][rname]
 
+            if rname == '*':
+                logging.warning(f"Wilcard name ('*') is not supported in skydns, skipping")
+                continue
+
             key = self._dots_to_slashes(f"{rname}.{zonename}")
             self._records[key] = Record(rname, record)
 
