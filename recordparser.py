@@ -28,7 +28,7 @@ class RecordParser:
                 skyrecord = record.skydns()
                 skyentries[key] = skyrecord
             except Exception as e:
-                logging.error(f"error converting record {key}: {str(e)}")
+                logging.error(f"error converting record '{key}', skipping: {str(e)}")
 
         return skyentries
 
