@@ -4,7 +4,7 @@ import json
 
 
 class EtcdClient:
-    def __init__(self, host: str, port: int, dry_run: bool = False, owner_id str = 'skyreg'):
+    def __init__(self, host: str, port: int, dry_run: bool = False, owner_id: str = 'skyreg'):
         self._owner_id = owner_id
         self._dry_run = dry_run
         self._etcd = etcd3.client(host, port)
