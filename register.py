@@ -18,6 +18,7 @@ def main():
     argparse_add_environ(parser, '--etcd-port', type=int, default=2379, help='etcd port')
     argparse_add_environ(parser, '--etcd-prefix', type=str, default='external-dns', help='Prefix for etcd record keys')
     argparse_add_environ(parser, '--loop-every', type=int, default=0, help='Loop every n seconds. Set to 0 to run once')
+    argparse_add_environ(parser, '--owner-id', type=str, default='skyreg', help='ID of the owner in case more than one skydns-register is running')
     args, extra = parser.parse_known_args()
 
     if args.verbose:
@@ -37,7 +38,7 @@ def main():
             rp.parse_zone(z)
 
         try:
-            etcd = etcdclient.EtcdClient(args.etcd_host, int(args.etcd_port), args.dry_run)
+            etcd = etcdclient.EtcdClient(args.etcd_host, int(args.etcd_port), args.dry_run, args.owner_id)
         except Exception as e:
             logging.error(f"could not connect to etcd at {args.etcd_host}:{args.etcd_port}: {str(e)}")
             exit(2)

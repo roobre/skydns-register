@@ -53,9 +53,7 @@ class Record:
     """
 
     def skydns(self) -> dict:
-        record = {
-            "managed-by": "skydns-register",
-        }
+        record = {}
 
         for entry in self._entries:
             if 'type' not in entry:
