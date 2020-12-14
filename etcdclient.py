@@ -22,6 +22,6 @@ class EtcdClient:
         for path in records:
             record = records[path]
             record['managed-by'] = self._owner_id
-            logging.info(f"Putting {path}/{self._owner_id}")
+            logging.info(f"Putting {path}")
             if not self._dry_run:
                 self._etcd.put(path, json.dumps(record))
