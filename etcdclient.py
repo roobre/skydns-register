@@ -15,7 +15,7 @@ class EtcdClient:
         for val, meta in self._etcd.get_all():
             val = json.loads(val)
             if 'managed-by' in val and val['managed-by'] == self._owner_id and meta.key.decode() not in records:
-                logging.info(f"Deleting {meta.key}")
+                logging.info(f"Deleting {meta.key.decode()}")
                 if not self._dry_run:
                     self._etcd.delete(meta.key)
 
