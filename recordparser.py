@@ -4,7 +4,7 @@ from typing import Dict
 
 
 class RecordParser:
-    def __init__(self, prefix: str = '', suffix: str = 'skyreg'):
+    def __init__(self, prefix: str = 'external-dns', suffix: str = 'skyreg'):
         self._records: Dict[Record] = {}
         self._prefix = prefix
         self._suffix = suffix
@@ -28,6 +28,7 @@ class RecordParser:
             try:
                 skyrecord = record.skydns()
                 skyrecord['targetstrip'] = 1
+                skyentries[key] = skyrecord
             except Exception as e:
                 logging.error(f"error converting record '{key}', skipping: {str(e)}")
 
