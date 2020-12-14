@@ -4,9 +4,10 @@ from typing import Dict
 
 
 class RecordParser:
-    def __init__(self, prefix: str = ''):
+    def __init__(self, prefix: str = 'external-dns', suffix: str = 'skyreg'):
         self._records: Dict[Record] = {}
         self._prefix = prefix
+        self._suffix = suffix
 
     def parse_zone(self, zone: dict):
         zonename = zone['zone']
@@ -26,6 +27,7 @@ class RecordParser:
             record = self._records[key]
             try:
                 skyrecord = record.skydns()
+                skyrecord['targetstrip'] = 1
                 skyentries[key] = skyrecord
             except Exception as e:
                 logging.error(f"error converting record '{key}', skipping: {str(e)}")
@@ -33,11 +35,14 @@ class RecordParser:
         return skyentries
 
     def _dots_to_slashes(self, dotname: str) -> str:
-        prefix = '/' + self._prefix
-        pieces = dotname.strip('.').split('.')
-        pieces.append('')
+        pieces = [ self._suffix ]
+
+        pieces += dotname.strip('.').split('.')
+
+        pieces.append(self._prefix)
+        pieces += [ '' ]
         pieces.reverse()
-        return prefix + '/'.join(pieces)
+        return '/'.join(pieces)
 
 
 class Record:
