@@ -37,8 +37,11 @@ class RecordParser:
     def _dots_to_slashes(self, dotname: str) -> str:
         pieces = [ '' ]
         pieces.append(self._prefix)
+
         pieces += dotname.strip('.').split('.')
+
         pieces.append(self._suffix)
+        pieces.reverse()
         return '/'.join(pieces)
 
 
