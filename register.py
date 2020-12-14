@@ -17,6 +17,7 @@ def main():
     argparse_add_environ(parser, '--etcd-host', type=str, default='localhost', help='etcd host')
     argparse_add_environ(parser, '--etcd-port', type=int, default=2379, help='etcd port')
     argparse_add_environ(parser, '--etcd-prefix', type=str, default='external-dns', help='Prefix for etcd record keys')
+    argparse_add_environ(parser, '--etcd-suffix', type=str, default='skyreg', help='Suffix for etcd record keys')
     argparse_add_environ(parser, '--loop-every', type=int, default=0, help='Loop every n seconds. Set to 0 to run once')
     argparse_add_environ(parser, '--owner-id', type=str, default='skyreg', help='ID of the owner in case more than one skydns-register is running')
     args, extra = parser.parse_known_args()
@@ -33,7 +34,7 @@ def main():
         for zonefile in extra:
             zw.load_file(zonefile)
 
-        rp = recordparser.RecordParser(prefix=args.etcd_prefix)
+        rp = recordparser.RecordParser(prefix=args.etcd_prefix, suffix=args.etcd_suffix)
         for z in zw.zones():
             rp.parse_zone(z)
 
