@@ -35,12 +35,12 @@ class RecordParser:
         return skyentries
 
     def _dots_to_slashes(self, dotname: str) -> str:
-        pieces.append(self._suffix)
+        pieces = [ self._suffix ]
 
         pieces += dotname.strip('.').split('.')
 
         pieces.append(self._prefix)
-        pieces = [ '' ]
+        pieces += [ '' ]
         pieces.reverse()
         return '/'.join(pieces)
 
